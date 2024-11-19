@@ -56,7 +56,7 @@ export default function App() {
       setActiveStage(stages[activeStage.id]);
       return 1;
     }
-    
+
     // Move to next subsection within current stage
     return newReflection.subsectionId + 1;
   };
@@ -69,6 +69,16 @@ export default function App() {
   const handleCompletionClose = () => {
     setShowCompletion(false);
     setShowDashboard(true);
+  };
+
+  const handleClearData = () => {
+    if (window.confirm('Are you sure you want to clear all your reflections and start over?')) {
+      localStorage.removeItem('reflections');
+      setReflections([]);
+      setActiveStage(stages[0]);
+      setShowDashboard(false);
+      setShowCompletion(false);
+    }
   };
 
   return (
@@ -173,9 +183,17 @@ export default function App() {
 
       <footer className="py-6 border-t border-gray-200 mt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-sm text-center text-gray-500">
-            Built by <a href="https://producthacker.ai" className="text-indigo-600 hover:text-indigo-700" target="_blank" rel="noopener noreferrer">Cam Fortin</a> for <a href="https://www.linkedin.com/in/bfretwell/" className="text-indigo-600 hover:text-indigo-700" target="_blank" rel="noopener noreferrer">Brian Fretwell</a> of <a href="https://www.findinggood.com/" className="text-indigo-600 hover:text-indigo-700" target="_blank" rel="noopener noreferrer">Finding Good</a> based on his "Success Map" framework and workshop PDF.
-          </p>
+          <div className="flex flex-col items-center space-y-2">
+            <p className="text-sm text-center text-gray-500">
+              Built by <a href="https://producthacker.ai" className="text-indigo-600 hover:text-indigo-700" target="_blank" rel="noopener noreferrer">Cam Fortin</a> for <a href="https://www.linkedin.com/in/bfretwell/" className="text-indigo-600 hover:text-indigo-700" target="_blank" rel="noopener noreferrer">Brian Fretwell</a> of <a href="https://www.findinggood.com/" className="text-indigo-600 hover:text-indigo-700" target="_blank" rel="noopener noreferrer">Finding Good</a> based on his "Success Map" framework and workshop PDF.
+            </p>
+            <button
+              onClick={handleClearData}
+              className="text-sm text-gray-400 hover:text-gray-600"
+            >
+              Clear and start over
+            </button>
+          </div>
         </div>
       </footer>
 
