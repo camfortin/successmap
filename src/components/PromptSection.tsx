@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, KeyboardEvent } from 'react';
 import { Save } from 'lucide-react';
 import SubsectionProgress from './SubsectionProgress';
 
@@ -28,7 +28,6 @@ export default function PromptSection({ stage, onSaveReflection, existingReflect
 
   const activeSubsection = stage.subsections.find(s => s.id === activeSubsectionId) || stage.subsections[0];
   
-  // Update input value when switching sections or subsections
   useEffect(() => {
     const currentReflection = existingReflections.find(
       r => r.stageId === stage.id && r.subsectionId === activeSubsectionId
@@ -50,9 +49,10 @@ export default function PromptSection({ stage, onSaveReflection, existingReflect
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey && enterToSave) {
       e.preventDefault();
+      e.stopPropagation();
       handleSave();
     }
   };
@@ -84,6 +84,7 @@ export default function PromptSection({ stage, onSaveReflection, existingReflect
             <button
               onClick={() => setEnterToSave(!enterToSave)}
               className={`text-sm ${enterToSave ? 'text-blue-600' : 'text-gray-400'}`}
+              type="button"
             >
               Enter to save {enterToSave ? 'on' : 'off'}
             </button>
@@ -91,6 +92,7 @@ export default function PromptSection({ stage, onSaveReflection, existingReflect
               onClick={handleSave}
               className="p-2 rounded-full hover:bg-gray-100 transition-colors"
               aria-label="Save reflection"
+              type="button"
             >
               <Save className="w-5 h-5 text-blue-600" />
             </button>
@@ -99,7 +101,7 @@ export default function PromptSection({ stage, onSaveReflection, existingReflect
         <textarea
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyDown}
           placeholder="Type your reflection here..."
           className="w-full p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[120px] resize-none"
         />
